@@ -1,0 +1,57 @@
+﻿acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf
+
+ab: 1
+eafb: 4
+dab: 7
+acedgfb: 8
+
+todos os segmentos de 1 estão contidos nos segmentos de 7, e retirando estes sobra apenas um segmento
+d quer dizer segmento de cima, é o que sobrou
+
+2, 3 e 5 contém 5 segmentos
+cdfbe: faltam a, g
+gcdfa: faltam b, e
+fbcad: faltam e, g
+
+dentre os dois segmentos que 3 não contém, 2 e 5 contém apenas um; para 2 e 5, porém, um dos outros dois dígitos contém os dois segmentos que faltam
+fbcad: 3, portanto
+
+4 contém um e apenas um segmento que 3 não contém
+e quer dizer o primeiro segmento da esquerda, portanto
+
+a, b são segmentos de 1 que são contidos em 4; segmento e já é conhecido, sobrou f
+f quer dizer segmento do centro
+
+5 contém todos os segmentos descobertos até agora, aqueles que originalmente são a, b, d (nesse caso são d, e, f)
+2, 5: cdfbe, gcdfa
+cdfbe: 5
+gcdfa: 2
+
+restam 0, 6, 9; apenas 0 não tem o segmento do centro (nesse caso é f)
+0, 6, 9
+cefabd, cdfgeb, cagedb
+cagedb: 0
+
+9 contém todos os segmentos do 7, 6 não contém
+6, 9
+cefabd, cdfgeb
+cefabd: 9
+cdfgeb: 6
+
+
+
+mapeamento:
+d: a
+e: b
+f: d
+
+cagedb: 0
+ab: 1
+gcdfa: 2
+fbcad: 3
+eafb: 4
+cdfbe: 5
+cdfgeb: 6
+dab: 7
+acedgfb: 8
+cefabd: 9
