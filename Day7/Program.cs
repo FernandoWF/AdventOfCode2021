@@ -13,7 +13,10 @@ for (var currentPosition = minPosition; currentPosition <= maxPosition; currentP
     var fuel = 0;
     foreach (var position in positions)
     {
-        fuel += Math.Abs(position - currentPosition);
+        var distance = Math.Abs(position - currentPosition);
+
+        // Sum of the terms of an arithmetic progression
+        fuel += (1 + distance) * distance / 2;
     }
     positionToFuel.Add(currentPosition, fuel);
 }
