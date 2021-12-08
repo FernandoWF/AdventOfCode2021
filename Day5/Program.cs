@@ -11,50 +11,93 @@ var lines = input.Select(inputLine =>
 
     return new Line { A = a, B = b };
 }).ToList();
-var nonDiagonalLines = lines.Where(l => l.DeltaX == 0 || l.DeltaY == 0).ToList();
-var maxX = nonDiagonalLines.Max(l => Math.Max(l.A.X, l.B.X));
-var maxY = nonDiagonalLines.Max(l => Math.Max(l.A.Y, l.B.Y));
+var maxX = lines.Max(l => Math.Max(l.A.X, l.B.X));
+var maxY = lines.Max(l => Math.Max(l.A.Y, l.B.Y));
 
 var board = new int[maxX + 1, maxY + 1];
-foreach (var line in nonDiagonalLines)
+foreach (var line in lines)
 {
+    // Vertical line or a point
     if (line.DeltaX == 0)
     {
-        // Vertical line or a point
+        // Upward
         if (line.DeltaY < 0)
         {
-            // Upward
             for (var i = line.A.Y; i >= line.B.Y; i--)
             {
                 board[line.A.X, i]++;
             }
         }
+        // Downward or a point
         else
         {
-            // Downward
             for (var i = line.A.Y; i <= line.B.Y; i++)
             {
                 board[line.A.X, i]++;
             }
         }
     }
-    else
+    // Horizontal line
+    else if (line.DeltaY == 0)
     {
-        // Horizontal line
+        // Backward
         if (line.DeltaX < 0)
         {
-            // Backward
             for (var i = line.A.X; i >= line.B.X; i--)
             {
                 board[i, line.A.Y]++;
             }
         }
+        // Forward
         else
         {
-            // Forward
             for (var i = line.A.X; i <= line.B.X; i++)
             {
                 board[i, line.A.Y]++;
+            }
+        }
+    }
+    // 45 degrees
+    else
+    {
+        // Backward
+        if (line.DeltaX < 0)
+        {
+            // Upward
+            if (line.DeltaY < 0)
+            {
+                for (int x = line.A.X, y = line.A.Y; x >= line.B.X && y >= line.B.Y; x--, y--)
+                {
+                    board[x, y]++;
+                }
+            }
+            // Downward
+            else
+            {
+                for (int x = line.A.X, y = line.A.Y; x >= line.B.X && y <= line.B.Y; x--, y++)
+                {
+                    board[x, y]++;
+                }
+            }
+        }
+        // Forward
+        else
+        {
+            // Upward
+            if (line.DeltaY < 0)
+            {
+                for (int x = line.A.X, y = line.A.Y; x <= line.B.X && y >= line.B.Y; x++, y--)
+                {
+                    board[x, y]++;
+                }
+            }
+            // Downward
+            else
+            {
+                for (int x = line.A.X, y = line.A.Y; x <= line.B.X && y <= line.B.Y; x++, y++)
+                {
+                    board[x, y]++;
+                }
             }
         }
     }
