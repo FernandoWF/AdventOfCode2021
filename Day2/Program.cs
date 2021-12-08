@@ -17,18 +17,23 @@ var commands = lines.Select(line =>
 
 var horizontalPosition = 0;
 var depth = 0;
+var aim = 0;
 
 foreach (var command in commands)
 {
-    if (command.Direction == Direction.Forward) { horizontalPosition += command.Units; }
-    if (command.Direction == Direction.Up) { depth -= command.Units; }
-    if (command.Direction == Direction.Down) { depth += command.Units; }
+    if (command.Direction == Direction.Forward)
+    {
+        horizontalPosition += command.Units;
+        depth += command.Units * aim;
+    }
+    if (command.Direction == Direction.Up) { aim -= command.Units; }
+    if (command.Direction == Direction.Down) { aim += command.Units; }
 }
 
 Console.WriteLine(horizontalPosition * depth);
 
 enum Direction { Forward, Up, Down }
-class Command
+struct Command
 {
     public Direction Direction { get; init; }
     public int Units { get; init; }
