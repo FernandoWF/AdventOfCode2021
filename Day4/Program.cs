@@ -63,33 +63,34 @@ void MarkNumber(Board board, int number)
     }
 }
 
-var winnerBoardIndex = -1;
 var lastCalledNumber = -1;
+Board lastWinnerBoard = null!;
+var boardsThatStillDidntWin = new List<Board>(boards);
 do
 {
     var calledNumber = numbersToCall.Dequeue();
-    for (var i = 0; i < boards!.Length; i++)
+    for (var i = 0; i < boardsThatStillDidntWin.Count; i++)
     {
-        MarkNumber(boards[i], calledNumber);
-        if (HasBoardWon(boards[i]))
+        MarkNumber(boardsThatStillDidntWin[i], calledNumber);
+        if (HasBoardWon(boardsThatStillDidntWin[i]))
         {
-            winnerBoardIndex = i;
+            lastWinnerBoard = boardsThatStillDidntWin[i];
+            boardsThatStillDidntWin.Remove(lastWinnerBoard);
+            i--;
             lastCalledNumber = calledNumber;
-            break;
         }
     }
 }
-while (winnerBoardIndex == -1);
+while (boardsThatStillDidntWin.Count > 0);
 
-var winnerBoard = boards[winnerBoardIndex];
 var sum = 0;
 for (var y = 0; y < boardSideLength; y++)
 {
     for (var x = 0; x < boardSideLength; x++)
     {
-        if (!winnerBoard.PositionMarks![x, y])
+        if (!lastWinnerBoard.PositionMarks![x, y])
         {
-            sum += winnerBoard.Positions![x, y];
+            sum += lastWinnerBoard.Positions![x, y];
         }
     }
 }
