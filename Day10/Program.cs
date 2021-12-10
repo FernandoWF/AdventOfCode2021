@@ -13,7 +13,7 @@ int FindIndexOfFirstEmptyChunk(string line)
     return -1;
 }
 
-var points = 0;
+var incompleteLines = new List<string>();
 for (int i = 0; i < lines.Length; i++)
 {
     var line = lines[i];
@@ -26,26 +26,102 @@ for (int i = 0; i < lines.Length; i++)
         }
         else
         {
-            switch (line[chunkIndex + 1])
-            {
-                case ')':
-                    points += 3;
-                    break;
-                case ']':
-                    points += 57;
-                    break;
-                case '}':
-                    points += 1197;
-                    break;
-                case '>':
-                    points += 25137;
-                    break;
-            }
             break;
         }
+
         chunkIndex = FindIndexOfFirstEmptyChunk(line);
+        if (chunkIndex == -1)
+        {
+            incompleteLines.Add(lines[i]);
+        }
     }
     while (chunkIndex > -1);
 }
 
-Console.WriteLine(points);
+var scores = new List<long>();
+var stack = new Stack<char>();
+for (int i = 0; i < incompleteLines.Count; i++)
+{
+    var line = incompleteLines[i];
+    var completionString = "";
+    for (int j = 0; j < line.Length; j++)
+    {
+        var character = line[j];
+        switch (character)
+        {
+            case '(':
+                stack.Push(character);
+                break;
+            case ')':
+                if (stack.Peek() == '(') { stack.Pop(); }
+                else { throw new Exception(); }
+                break;
+            case '[':
+                stack.Push(character);
+                break;
+            case ']':
+                if (stack.Peek() == '[') { stack.Pop(); }
+                else { throw new Exception(); }
+                break;
+            case '{':
+                stack.Push(character);
+                break;
+            case '}':
+                if (stack.Peek() == '{') { stack.Pop(); }
+                else { throw new Exception(); }
+                break;
+            case '<':
+                stack.Push(character);
+                break;
+            case '>':
+                if (stack.Peek() == '<') { stack.Pop(); }
+                else { throw new Exception(); }
+                break;
+        }
+    }
+
+    while (stack.Any())
+    {
+        var popped = stack.Pop();
+        switch (popped)
+        {
+            case '(':
+                completionString += ')';
+                break;
+            case '[':
+                completionString += ']';
+                break;
+            case '{':
+                completionString += '}';
+                break;
+            case '<':
+                completionString += '>';
+                break;
+        }
+    }
+
+    var score = 0L;
+    for (int j = 0; j < completionString.Length; j++)
+    {
+        score *= 5;
+        switch (completionString[j])
+        {
+            case ')':
+                score += 1;
+                break;
+            case ']':
+                score += 2;
+                break;
+            case '}':
+                score += 3;
+                break;
+            case '>':
+                score += 4;
+                break;
+        }
+    }
+    scores.Add(score);
+}
+
+var middleScore = scores.OrderBy(s => s).ToList()[scores.Count / 2];
+Console.WriteLine(middleScore);
