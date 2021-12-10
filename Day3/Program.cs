@@ -3,23 +3,61 @@ var numbers = lines.Select(l => l.Select(b => int.Parse(b.ToString()))
                                  .ToArray())
                    .ToArray();
 
-var gammaRate = 0;
-var epsilonRate = 0;
-for (var i = 0; i < numbers[0].Length; i++)
+var generatorRating = 0;
+var scrubberRating = 0;
+var remainingGeneratorNumbers = new List<int[]>(numbers);
+var remainingScrubberNumbers = new List<int[]>(numbers);
+
+for (var i = 0; i < numbers[0].Length && (remainingGeneratorNumbers.Count > 1 || remainingScrubberNumbers.Count > 1); i++)
 {
-    var zeroCount = 0;
-    for (var j = 0; j < numbers.Length; j++)
+    if (remainingGeneratorNumbers.Count > 1)
     {
-        if (numbers[j][i] == 0) { zeroCount++; }
+        var zeroCount = 0;
+        for (var j = 0; j < remainingGeneratorNumbers.Count; j++)
+        {
+            if (remainingGeneratorNumbers[j][i] == 0) { zeroCount++; }
+        }
+
+        if (zeroCount > remainingGeneratorNumbers.Count / 2)
+        {
+            remainingGeneratorNumbers = remainingGeneratorNumbers.Where(n => n[i] == 0).ToList();
+        }
+        else
+        {
+            remainingGeneratorNumbers = remainingGeneratorNumbers.Where(n => n[i] == 1).ToList();
+        }
     }
 
-    if (zeroCount > numbers.Length / 2)
+    if (remainingScrubberNumbers.Count > 1)
     {
-        epsilonRate |= 1 << (numbers[0].Length - 1 - i);
-    }
-    else
-    {
-        gammaRate |= 1 << (numbers[0].Length - 1 - i);
+        var zeroCount = 0;
+        for (var j = 0; j < remainingScrubberNumbers.Count; j++)
+        {
+            if (remainingScrubberNumbers[j][i] == 0) { zeroCount++; }
+        }
+
+        if (zeroCount > remainingScrubberNumbers.Count / 2)
+        {
+            remainingScrubberNumbers = remainingScrubberNumbers.Where(n => n[i] == 1).ToList();
+        }
+        else
+        {
+            remainingScrubberNumbers = remainingScrubberNumbers.Where(n => n[i] == 0).ToList();
+        }
     }
 }
-Console.WriteLine(gammaRate * epsilonRate);
+
+var generatorNumber = remainingGeneratorNumbers.Single();
+var scrubberNumber = remainingScrubberNumbers.Single();
+
+for (var i = 0; i < generatorNumber.Length; i++)
+{
+    generatorRating |= generatorNumber[i] << (generatorNumber.Length - 1 - i);
+}
+
+for (var i = 0; i < scrubberNumber.Length; i++)
+{
+    scrubberRating |= scrubberNumber[i] << (scrubberNumber.Length - 1 - i);
+}
+
+Console.WriteLine(generatorRating * scrubberRating);
