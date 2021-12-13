@@ -59,6 +59,7 @@ void FlashOctopus(int x, int y)
     FlashOctopus(x + 1, y + 1);
 }
 
+var haveAllOctopusesFlashed = false;
 void ExecuteStep()
 {
     for (var y = 0; y < height; y++)
@@ -77,6 +78,7 @@ void ExecuteStep()
         }
     }
 
+    haveAllOctopusesFlashed = true;
     for (var y = 0; y < height; y++)
     {
         for (var x = 0; x < width; x++)
@@ -86,14 +88,19 @@ void ExecuteStep()
                 grid[x, y] = 0;
                 hasFlashedGrid![x, y] = false;
             }
+            else
+            {
+                haveAllOctopusesFlashed = false;
+            }
         }
     }
 }
 
-var steps = 100;
-for (var x = 0; x < steps; x++)
+var step = 0;
+while (!haveAllOctopusesFlashed)
 {
     ExecuteStep();
+    step++;
 }
 
-Console.WriteLine(flashes);
+Console.WriteLine(step);
