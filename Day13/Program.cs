@@ -34,57 +34,54 @@ foreach (var point in points)
     paper[point.X, point.Y] = true;
 }
 
-var firstInstruction = foldInstructions[0];
-if (firstInstruction.Axis == Axis.X)
+foreach (var instruction in foldInstructions)
 {
-    var i = 1;
-    var sourceX = firstInstruction.Coordinate + i;
-    while (sourceX <= paperEndX)
+    if (instruction.Axis == Axis.X)
     {
-        var targetX = firstInstruction.Coordinate - i;
-        for (var y = 0; y <= paperEndY; y++)
+        var i = 1;
+        var sourceX = instruction.Coordinate + i;
+        while (sourceX <= paperEndX)
         {
-            if (paper[sourceX, y])
+            var targetX = instruction.Coordinate - i;
+            for (var y = 0; y <= paperEndY; y++)
             {
-                paper[targetX, y] = true;
+                if (paper[sourceX, y])
+                {
+                    paper[targetX, y] = true;
+                }
             }
+            sourceX = instruction.Coordinate + ++i;
         }
-        sourceX = firstInstruction.Coordinate + ++i;
+        paperEndX = instruction.Coordinate - 1;
     }
-    paperEndX = firstInstruction.Coordinate - 1;
-}
-else
-{
-    var i = 1;
-    var sourceY = firstInstruction.Coordinate + i;
-    while (sourceY <= paperEndY)
+    else
     {
-        var targetY = firstInstruction.Coordinate - i;
-        for (var x = 0; x <= paperEndX; x++)
+        var i = 1;
+        var sourceY = instruction.Coordinate + i;
+        while (sourceY <= paperEndY)
         {
-            if (paper[x, sourceY])
+            var targetY = instruction.Coordinate - i;
+            for (var x = 0; x <= paperEndX; x++)
             {
-                paper[x, targetY] = true;
+                if (paper[x, sourceY])
+                {
+                    paper[x, targetY] = true;
+                }
             }
+            sourceY = instruction.Coordinate + ++i;
         }
-        sourceY = firstInstruction.Coordinate + ++i;
+        paperEndY = instruction.Coordinate - 1;
     }
-    paperEndY = firstInstruction.Coordinate - 1;
 }
 
-var visibleDots = 0;
 for (var y = 0; y <= paperEndY; y++)
 {
     for (var x = 0; x <= paperEndX; x++)
     {
-        if (paper[x, y])
-        {
-            visibleDots++;
-        }
+        Console.Write(paper[x, y] ? "#" : ".");
     }
+    Console.WriteLine();
 }
-
-Console.WriteLine(visibleDots);
 
 struct FoldInstruction
 {
