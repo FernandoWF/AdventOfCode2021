@@ -47,6 +47,7 @@ class Path : IEnumerable<string>
 {
     private readonly List<string> list = new();
     private readonly HashSet<string> alreadyVisitedSmallCaves = new();
+    private bool hasAnySmallCaveVisitedTwice = false;
 
     public string Last => list.Last();
 
@@ -76,7 +77,14 @@ class Path : IEnumerable<string>
         {
             if (alreadyVisitedSmallCaves.Contains(cave))
             {
-                return false;
+                if (hasAnySmallCaveVisitedTwice || cave == "start")
+                {
+                    return false;
+                }
+                else
+                {
+                    hasAnySmallCaveVisitedTwice = true;
+                }
             }
             alreadyVisitedSmallCaves.Add(cave);
         }
